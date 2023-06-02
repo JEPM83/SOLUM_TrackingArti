@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "SolumPrintServiceLabel": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
