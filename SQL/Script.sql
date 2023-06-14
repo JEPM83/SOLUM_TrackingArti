@@ -58,7 +58,7 @@ where HostGroupId = @HostGroupId and (T1.Interno is null and T1.Pedido is null)
 
 update T1 set T1.FecPed = T0.FecPed,T1.FecApruCred = T0.FecApruCred,T1.FecApruDscto = T0.FecApruDscto,T1.FecApruExhib = T0.FecApruExhib,T1.Fact_BV = T0.Fact_BV, T1.FecFact_BV = T0.FecFact_BV,
 T1.Actualizaciones = T1.Actualizaciones + 1,T1.Fecha_actualizacion = GETDATE()
-from SAP_HOST_TRACKING T0 inner join SAP_TRACKING T1 ON (t0.Interno = T1.Interno and t0.Pedido = T1.Pedido)
+from SAP_HOST_TRACKING T0 inner join SAP_TRACKING T1 ON (t0.Interno = T1.Interno and t0.Pedido = T1.Pedido) where T0.HostGroupId = @HostGroupId
 commit transaction transaction_tracking
 go
 
@@ -73,10 +73,10 @@ go
 CREATE procedure [dbo].[BZ_CONEP_TRACKING_ARTI]
 @A_CLIENTE nvarchar(30),@A_FECINI nvarchar(10),@A_FECFIN nvarchar(10),@A_PEDIDO nvarchar(30)
 as
-select '','N°PEDIDO ORIGINAL','PEDIDO ORIGINAL','APROB. CREDITO','APROB. DESCUENTO','APROB. EXHIBIDOR','PEDIDO','CLIENTE','FECHA CREACION','RECIBIDO','PREPARADO','DESPACHADO','ENTREGADO','LIQUIDADO','UBIGEO','TRANSP','PLACA','BULTOS','PESO','GUIA','N°FACTURA','FACTURA BOLETA','OBS.'
+select 'PEDDIFPICKING','N°PEDIDO ORIGINAL','PEDIDO ORIGINAL','APROB. CREDITO','APROB. DESCUENTO','APROB. EXHIBIDOR','PEDIDO','CLIENTE','FECHA CREACION','RECIBIDO','PREPARADO','DESPACHADO','ENTREGADO','LIQUIDADO','UBIGEO','TRANSP','PLACA','BULTOS','PESO','GUIA','N° FACTURA','FACTURA BOLETA','OBS.'
 SELECT (select case when (sum(DelivrdQty) <> sum(Quantity)) and convert(CHAR(10),D.U_BZ_FECHA,126) <> ''  then '*' else '' END from RDR1 where RDR1.DocEntry = R.DocEntry) AS 'ESTADO',
-T4.Pedido,T4.FecInterno,T4.FecApruCred,T4.FecApruDscto,T4.FecApruExhib,
-R.NumAtCard AS PEDIDO,R.U_BZ_CODCLI + '-' + r.U_BZ_CLIENTE AS 'Cliente',T4.FecPed,
+T4.Pedido,T4.FecPed,T4.FecApruCred,T4.FecApruDscto,T4.FecApruExhib,
+R.NumAtCard AS PEDIDO,R.U_BZ_CODCLI + '-' + r.U_BZ_CLIENTE AS 'Cliente',T4.FecInterno,
 convert(CHAR(10),R.DocDate,126) + ' ' + dbo.GetTime(R.DocTime,0) 'RECIBIDO',
 CASE when R.u_EstadoPacking = 4 then R.U_BZ_CONTAB else '' end 'PREPARADO',
 convert(CHAR(10),N.U_BZ_FFINAL,126) AS 'ENVIADO',
